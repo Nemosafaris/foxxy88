@@ -6,3 +6,6 @@
 #delete-dialog::backdrop { background: #28254280; }
 #delete-dialog .actions { justify-content: flex-end; }
 .danger { color: white; background: #a12f3c; border-color: #a12f3c; }
+
+.feedback-cell { min-width: 170px; max-width: 340px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.feedback-cell-empty { color: #68667c; }
