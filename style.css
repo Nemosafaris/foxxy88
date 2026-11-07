@@ -38,3 +38,39 @@ details li { margin: 12px 0; }
 @media (max-width: 480px) { body { padding: 20px 12px; } .option-item { padding: 12px; } .nav-buttons { flex-wrap: wrap; } }
 
 .privacy-note {font-size: .88rem; color: #555; background: #f1efff; padding: .85rem 1rem; border-radius: 10px; margin-bottom: 1rem;}
+
+/* The cat has a dedicated strip above the form so it never overlaps a control. */
+.cat-trail { height: 48px; position: relative; overflow: hidden; margin: -12px 0 8px; }
+.cat-trail::before { content: ""; position: absolute; inset: auto 0 3px; border-bottom: 1px solid #eae4f8; }
+.cat-walker { position: absolute; bottom: 0; left: 0; right: 0; width: 100%; }
+.survey-cat { display: block; width: 76px; height: 46px; transform-origin: center bottom; }
+@media (prefers-reduced-motion: no-preference) {
+    .cat-walker { animation: cat-crossing 22s linear 3 both; }
+    .survey-cat { animation: cat-turn 22s step-end 3 both; }
+    .cat-tail { transform-origin: 24px 30px; animation: cat-tail-sway .8s ease-in-out alternate 82; }
+    .cat-leg { transform-origin: center 36px; animation: cat-step .36s ease-in-out alternate 182; }
+    .cat-leg-alt { animation-delay: -.36s; }
+    .trait-hero { animation: trait-arrive .35s ease-out both; }
+}
+@keyframes cat-crossing {
+    0%, 100% { transform: translateX(0); }
+    48%, 52% { transform: translateX(calc(100% - 76px)); }
+}
+@keyframes cat-turn {
+    0%, 100% { transform: scaleX(1); }
+    50% { transform: scaleX(-1); }
+}
+@keyframes cat-tail-sway { from { transform: rotate(-8deg); } to { transform: rotate(12deg); } }
+@keyframes cat-step { from { transform: skewX(-16deg); } to { transform: skewX(16deg); } }
+@keyframes trait-arrive { from { transform: translateY(6px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.trait-hero { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.trait-icon { display: inline-grid; place-items: center; width: 2rem; height: 2rem; flex: 0 0 auto; border-radius: 10px; background: var(--trait-bg); }
+.trait-hero .trait-icon { width: 3.5rem; height: 3.5rem; font-size: 1.8rem; border-radius: 17px; }
+.trait-icon--analytical { --trait-bg: #eae5ff; }
+.trait-icon--social { --trait-bg: #ffe6ee; }
+.trait-icon--adaptable { --trait-bg: #e1f5e9; }
+.trait-icon--action { --trait-bg: #fff0c9; }
+.score-name { display: flex; align-items: center; gap: 10px; }
+.score-row { align-items: center; }
+.score-row strong { white-space: nowrap; }

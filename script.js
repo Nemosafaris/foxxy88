@@ -64,10 +64,10 @@ const questions = [
 
 // ผลลัพธ์ด้านบุคลิกภาพเป็นการสะท้อนแนวโน้มจากคำตอบ ไม่ใช่แบบทดสอบทางจิตวิทยาที่ผ่านการรับรอง
 const traits = {
-    analytical: { name: 'นักคิดและวางแผน', detail: 'คุณมีแนวโน้มให้ความสำคัญกับข้อมูล ความรอบคอบ และการวางแผนก่อนลงมือทำ' },
-    social: { name: 'นักประสานงาน', detail: 'คุณมีแนวโน้มให้ความสำคัญกับการสื่อสาร การรับฟัง และการทำงานร่วมกับผู้อื่น' },
-    adaptable: { name: 'นักปรับตัวและเรียนรู้', detail: 'คุณมีแนวโน้มเปิดรับการเปลี่ยนแปลง เรียนรู้จากประสบการณ์ และปรับวิธีการตามสถานการณ์' },
-    action: { name: 'นักลงมือทำ', detail: 'คุณมีแนวโน้มเน้นการลงมือปฏิบัติ ความกระตือรือร้น และการทำงานให้สำเร็จ' }
+    analytical: { icon: '🔍', name: 'นักคิดและวางแผน', detail: 'คุณมีแนวโน้มให้ความสำคัญกับข้อมูล ความรอบคอบ และการวางแผนก่อนลงมือทำ' },
+    social: { icon: '🤝', name: 'นักประสานงาน', detail: 'คุณมีแนวโน้มให้ความสำคัญกับการสื่อสาร การรับฟัง และการทำงานร่วมกับผู้อื่น' },
+    adaptable: { icon: '🌱', name: 'นักปรับตัวและเรียนรู้', detail: 'คุณมีแนวโน้มเปิดรับการเปลี่ยนแปลง เรียนรู้จากประสบการณ์ และปรับวิธีการตามสถานการณ์' },
+    action: { icon: '⚡', name: 'นักลงมือทำ', detail: 'คุณมีแนวโน้มเน้นการลงมือปฏิบัติ ความกระตือรือร้น และการทำงานให้สำเร็จ' }
 };
 // ระบุลักษณะจากแต่ละตัวเลือกอย่างชัดเจน ไม่ใช้ value ซึ่งไม่ซ้ำกันมาเป็นคะแนน
 const traitByQuestion = [
@@ -165,6 +165,14 @@ function findFirstMissing() {
     return answers.findIndex(value => value === null);
 }
 
+function createTraitIcon(key) {
+    const icon = document.createElement('span');
+    icon.classList.add('trait-icon', 'trait-icon--' + key);
+    icon.setAttribute('aria-hidden', 'true');
+    icon.textContent = traits[key].icon;
+    return icon;
+}
+
 function createResults() {
     const scores = Object.fromEntries(Object.keys(traits).map(key => [key, 0]));
     const summary = [];
@@ -180,7 +188,10 @@ function createResults() {
     feedback.replaceChildren();
     const title = document.createElement('h3');
     title.textContent = `แนวโน้มเด่นของคุณ: ${leaders.map(key => traits[key].name).join(' / ')}`;
-    feedback.appendChild(title);
+    const badge = document.createElement('div');
+    badge.className = 'trait-hero';
+    badge.append(...leaders.map(createTraitIcon));
+    feedback.append(badge, title);
     const description = document.createElement('p');
     description.textContent = leaders.map(key => traits[key].detail).join(' ');
     feedback.appendChild(description);
@@ -191,7 +202,8 @@ function createResults() {
         const row = document.createElement('div');
         row.className = 'score-row';
         const name = document.createElement('span');
-        name.textContent = traits[key].name;
+        name.className = 'score-name';
+        name.append(createTraitIcon(key), traits[key].name);
         const count = document.createElement('strong');
         count.textContent = `${score} / ${questions.length}`;
         row.append(name, count);
