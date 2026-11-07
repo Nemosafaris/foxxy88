@@ -10,8 +10,15 @@
     <main class="container">
         <h1 class="title">แบบสำรวจบุคลิกภาพ</h1>
         <div class="notifications-container" aria-live="polite"></div>
-        <p class="privacy-note">การส่งแบบสอบถามถือว่าคุณยินยอมให้จัดเก็บคำตอบทั้ง 10 ข้อและวันเวลาที่ส่ง เพื่อนำไปวิเคราะห์ผลแบบสอบถาม กรุณาอย่ากรอกข้อมูลส่วนบุคคลลงในคำตอบ</p>
-        <form id="personalityForm" novalidate>
+        <p class="privacy-note">การส่งแบบสอบถามถือว่าคุณยินยอมให้จัดเก็บชื่อเล่น คำตอบทั้ง 10 ข้อ และวันเวลาที่ส่ง เพื่อนำไปวิเคราะห์ผลแบบสอบถาม กรุณาใช้ชื่อเล่นและหลีกเลี่ยงการกรอกชื่อจริงหรือข้อมูลติดต่อ</p>
+        <form id="nickname-form">
+            <label class="question-text" for="nickname">ชื่อเล่น</label>
+            <input id="nickname" name="nickname" type="text" autocomplete="nickname" maxlength="40" required>
+            <div class="nav-buttons">
+                <button type="submit" class="submit-btn">เริ่มทำแบบสอบถาม</button>
+            </div>
+        </form>
+        <form id="personalityForm" class="hidden" novalidate>
             <div id="progress-section">
                 <p id="progress-label" class="progress-label"></p>
                 <div class="progress-bar" role="progressbar" aria-label="ความคืบหน้า" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="progress-fill"></span></div>
@@ -20,7 +27,7 @@
             <div class="nav-buttons">
                 <button type="button" id="prev-btn" class="nav-btn hidden">ย้อนกลับ</button>
                 <button type="button" id="next-btn" class="nav-btn hidden">ถัดไป</button>
-                <button type="submit" class="submit-btn hidden">ส่งแบบสอบถาม</button>
+                <button type="submit" id="survey-submit" class="submit-btn hidden">ส่งแบบสอบถาม</button>
             </div>
             <section id="results-container" class="hidden" tabindex="-1">
                 <h2>ขอบคุณสำหรับการตอบคำถาม!</h2>

@@ -83,6 +83,7 @@ const traitByQuestion = [
     ['analytical', 'action', 'social', 'adaptable']
 ];
 
+let nickname = '';
 let currentQuestion = 0;
 let isSubmitting = false;
 const answers = Array(questions.length).fill(null);
@@ -147,10 +148,10 @@ function renderQuestion() {
 function updateButtons() {
     $('#prev-btn').classList.toggle('hidden', currentQuestion === 0);
     $('#next-btn').classList.toggle('hidden', currentQuestion === questions.length - 1);
-    $('.submit-btn').classList.toggle('hidden', currentQuestion !== questions.length - 1);
+    $('#survey-submit').classList.toggle('hidden', currentQuestion !== questions.length - 1);
     $('#next-btn').disabled = isSubmitting;
     $('#prev-btn').disabled = isSubmitting;
-    $('.submit-btn').disabled = isSubmitting;
+    $('#survey-submit').disabled = isSubmitting;
 }
 
 function ensureAnswered() {
@@ -219,7 +220,7 @@ function createResults() {
 
 async function submitSurvey(event) {
     event.preventDefault();
-    if (isSubmitting) return;
+    if (isSubmitting || !nickname) return;
     const missing = findFirstMissing();
     if (missing >= 0) {
         currentQuestion = missing;
@@ -230,6 +231,8 @@ async function submitSurvey(event) {
     isSubmitting = true;
     updateButtons();
     const data = Object.fromEntries(answers.map((answer, index) => [`q${index}`, answer]));
+    data.nickname = nickname;
+    $('#restart-btn').disabled = true;
     // แสดงผลได้โดยไม่ต้องพึ่งพาเซิร์ฟเวอร์ (มีเพียงไฟล์ frontend ที่แนบมา)
     createResults();
     $('#questions-container').classList.add('hidden');
@@ -260,6 +263,7 @@ async function submitSurvey(event) {
         }
     }
     isSubmitting = false;
+    $('#restart-btn').disabled = false;
 }
 
 function restartSurvey() {
@@ -272,7 +276,11 @@ function restartSurvey() {
     $('#results-container').classList.add('hidden');
     $('#restart-btn').classList.add('hidden');
     $('#save-status').textContent = '';
-    renderQuestion();
+    nickname = '';
+    $('#nickname-form').reset();
+    $('#personalityForm').classList.add('hidden');
+    $('#nickname-form').classList.remove('hidden');
+    $('#nickname').focus();
     window.scrollTo({top: 0, behavior: 'smooth'});
 }
 
@@ -292,5 +300,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     $('#personalityForm').addEventListener('submit', submitSurvey);
     $('#restart-btn').addEventListener('click', restartSurvey);
-    renderQuestion();
+    const nicknameInput = $('#nickname');
+    nicknameInput.addEventListener('input', () => nicknameInput.setCustomValidity(''));
+    $('#nickname-form').addEventListener('submit', event => {
+        event.preventDefault();
+        const value = nicknameInput.value.trim();
+        if (!value || /[\x00-\x1f\x7f\uD800-\uDFFF\uFFFE\uFFFF]/u.test(value)) {
+            nicknameInput.setCustomValidity('กรุณากรอกชื่อเล่นที่ถูกต้อง');
+            nicknameInput.reportValidity();
+            return;
+        }
+        nickname = value;
+        $('#nickname-form').classList.add('hidden');
+        $('#personalityForm').classList.remove('hidden');
+        renderQuestion();
+        const heading = $('#questions-container h2');
+        heading.tabIndex = -1;
+        heading.focus();
+    });
 });

@@ -30,15 +30,25 @@ function issueSession(res){const p=`${Date.now()+8*60*60*1000}.${crypto.randomBy
 function authenticated(req){const cookies=String(req.headers.cookie||'').split(';').map(x=>x.trim());const token=cookies.find(x=>x.startsWith('admin_session='))?.slice(14);if(!token)return false;const cut=token.lastIndexOf('.');if(cut<0)return false;const p=token.slice(0,cut),s=token.slice(cut+1);if(!safeEqual(s,sign(p)))return false;const expiry=Number(p.split('.')[0]);return Number.isFinite(expiry)&&expiry>Date.now()&&expiry<Date.now()+9*60*60*1000;}
 async function readJSON(req,limit=8192){if(!String(req.headers['content-type']||'').toLowerCase().startsWith('application/json'))throw Object.assign(new Error('กรุณาส่ง JSON'),{code:415});let body='';for await(const chunk of req){body+=chunk;if(Buffer.byteLength(body)>limit)throw Object.assign(new Error('ข้อมูลใหญ่เกินไป'),{code:413});}try{return JSON.parse(body);}catch{throw Object.assign(new Error('JSON ไม่ถูกต้อง'),{code:400});}}
 function ipFrom(req){return req.socket.remoteAddress||'unknown';}
-function serialize(row){const t=translate(row.answers);return {id:row.id,submitted_at:row.submitted_at,details:t.details,result:t.result,scores:t.scores};}
+function serialize(row){const t=translate(row.answers);return {id:row.id,submitted_at:row.submitted_at,nickname:row.answers?.nickname??null,details:t.details,result:t.result,scores:t.scores};}
 const server=http.createServer(async(req,res)=>{
  headers(res);let pathname,query;try{const u=new URL(req.url,'http://localhost');pathname=u.pathname;query=u.searchParams;}catch{return json(res,400,{error:'URL ไม่ถูกต้อง'});}
  try{
   if(pathname==='/api/health'&&req.method==='GET'){try{await db.query('SELECT 1');return json(res,200,{ok:true,database:'connected'});}catch{return json(res,503,{ok:false,database:'unavailable'});}}
   if(pathname==='/api/results'&&req.method==='POST'){
    if(!guardOrigin(req))return json(res,403,{error:'Origin ไม่ถูกต้อง'});
-   const data=await readJSON(req);if(!valid(data))return json(res,400,{error:'กรุณาตอบให้ครบ 10 ข้อ'});
-   const id=crypto.randomUUID();await db.query('INSERT INTO survey_results (id,answers) VALUES ($1,$2::jsonb)',[id,JSON.stringify(data)]);return json(res,201,{success:true,id});
+   const data=await readJSON(req);
+   const {nickname,...answers}=data??{};
+   if(!valid(answers))return json(res,400,{error:'กรุณาตอบให้ครบ 10 ข้อ'});
+   // Keep accepting submissions from survey pages opened before this deployment.
+   if(nickname!==undefined){
+    const name=typeof nickname==='string'?nickname.trim():'';
+    if(!name||name.length>40||/[\x00-\x1f\x7f\uD800-\uDFFF\uFFFE\uFFFF]/u.test(name)){
+     return json(res,400,{error:'กรุณากรอกชื่อเล่นที่ถูกต้อง ไม่เกิน 40 ตัวอักษร'});
+    }
+    answers.nickname=name;
+   }
+   const id=crypto.randomUUID();await db.query('INSERT INTO survey_results (id,answers) VALUES ($1,$2::jsonb)',[id,JSON.stringify(answers)]);return json(res,201,{success:true,id});
   }
   if(pathname==='/api/admin/login'&&req.method==='POST'){
    if(!guardOrigin(req))return json(res,403,{error:'Origin ไม่ถูกต้อง'});
