@@ -100,3 +100,10 @@ details li { margin: 12px 0; }
     from { transform: rotate(-18deg); }
     to { transform: rotate(24deg); }
 }
+
+#creator-feedback-section { margin-top: 24px; }
+#creator-feedback-section label { display: block; font-weight: 650; }
+#creator-feedback-hint { margin: 4px 0 8px; color: #666; font-size: .88rem; }
+#creator-feedback { width: 100%; min-height: 100px; resize: vertical; border: 2px solid #e8eaf2; border-radius: 12px; padding: 10px 12px; color: inherit; font: inherit; }
+#creator-feedback:focus-visible { outline: 3px solid #a890f0; outline-offset: 3px; }
+#survey-submit:disabled { cursor: default; }

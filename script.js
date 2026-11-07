@@ -162,7 +162,9 @@ function updateButtons() {
     $('#survey-submit').classList.toggle('hidden', currentQuestion !== questions.length - 1);
     $('#next-btn').disabled = isSubmitting;
     $('#prev-btn').disabled = isSubmitting;
-    $('#survey-submit').disabled = isSubmitting;
+    const feedbackInput = $('#creator-feedback');
+    $('#creator-feedback-section').classList.toggle('hidden', currentQuestion !== questions.length - 1);
+    $('#survey-submit').disabled = isSubmitting || !feedbackInput.value.trim();
 }
 
 function ensureAnswered() {
@@ -251,14 +253,25 @@ async function submitSurvey(event) {
         createNotification('กรุณาตอบคำถามให้ครบทุกข้อ');
         return;
     }
+    const feedbackInput = $('#creator-feedback');
+    const creatorFeedback = feedbackInput.value.trim();
+    if (!creatorFeedback || creatorFeedback.length > 500 || /[\x00-\x08\x0b\x0c\x0e-\x1f\x7f\uD800-\uDFFF\uFFFE\uFFFF]/u.test(creatorFeedback)) {
+        currentQuestion = questions.length - 1;
+        renderQuestion();
+        createNotification('กรุณาเขียนข้อความถึงคนทำเว็บให้ถูกต้องและไม่เกิน 500 ตัวอักษร');
+        feedbackInput.focus();
+        return;
+    }
     isSubmitting = true;
     updateButtons();
     const data = Object.fromEntries(answers.map((answer, index) => [`q${index}`, answer]));
     data.nickname = nickname;
+    data.creatorFeedback = creatorFeedback;
     $('#restart-btn').disabled = true;
     // แสดงผลได้โดยไม่ต้องพึ่งพาเซิร์ฟเวอร์ (มีเพียงไฟล์ frontend ที่แนบมา)
     createResults();
     $('#questions-container').classList.add('hidden');
+    $('#creator-feedback-section').classList.add('hidden');
     $('#personalityForm .nav-buttons').classList.add('hidden');
     $('#progress-section').classList.add('hidden');
     $('#results-container').classList.remove('hidden');
@@ -300,6 +313,8 @@ function restartSurvey() {
     $('#results-container').classList.add('hidden');
     $('#restart-btn').classList.add('hidden');
     $('#save-status').textContent = '';
+    $('#creator-feedback').value = '';
+    $('#creator-feedback-section').classList.add('hidden');
     nickname = '';
     $('#nickname-form').reset();
     $('#personalityForm').classList.add('hidden');
@@ -323,6 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     $('#personalityForm').addEventListener('submit', submitSurvey);
+    $('#creator-feedback').addEventListener('input', updateButtons);
     $('#restart-btn').addEventListener('click', restartSurvey);
     const nicknameInput = $('#nickname');
     nicknameInput.addEventListener('input', () => nicknameInput.setCustomValidity(''));

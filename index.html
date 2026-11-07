@@ -29,7 +29,7 @@
             <p class="cat-message" role="status"></p>
         </div>
         <div class="notifications-container" aria-live="polite"></div>
-        <p class="privacy-note">การส่งแบบสอบถามถือว่าคุณยินยอมให้จัดเก็บชื่อเล่น คำตอบทั้ง 10 ข้อ และวันเวลาที่ส่ง เพื่อนำไปวิเคราะห์ผลแบบสอบถาม กรุณาใช้ชื่อเล่นและหลีกเลี่ยงการกรอกชื่อจริงหรือข้อมูลติดต่อ</p>
+        <p class="privacy-note">การส่งแบบสอบถามถือว่าคุณยินยอมให้จัดเก็บชื่อเล่น คำตอบทั้ง 10 ข้อ ข้อความถึงคนทำเว็บ และวันเวลาที่ส่ง เพื่อนำไปวิเคราะห์ผลแบบสอบถาม กรุณาใช้ชื่อเล่นและหลีกเลี่ยงการกรอกชื่อจริงหรือข้อมูลติดต่อ</p>
         <form id="nickname-form">
             <label class="question-text" for="nickname">ชื่อเล่น</label>
             <input id="nickname" name="nickname" type="text" autocomplete="nickname" maxlength="40" required>
@@ -43,6 +43,11 @@
                 <div class="progress-bar" role="progressbar" aria-label="ความคืบหน้า" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="progress-fill"></span></div>
             </div>
             <section class="question" id="questions-container" aria-live="polite"></section>
+            <div id="creator-feedback-section" class="hidden">
+                <label for="creator-feedback">อยากบอกอะไรกับคนทำเว็บ?</label>
+                <p id="creator-feedback-hint">ต้องกรอกก่อนส่ง สูงสุด 500 ตัวอักษร กรุณาไม่ใส่ข้อมูลส่วนตัว</p>
+                <textarea id="creator-feedback" name="creatorFeedback" aria-describedby="creator-feedback-hint" rows="4" maxlength="500" required></textarea>
+            </div>
             <div class="nav-buttons">
                 <button type="button" id="prev-btn" class="nav-btn hidden">ย้อนกลับ</button>
                 <button type="button" id="next-btn" class="nav-btn hidden">ถัดไป</button>
