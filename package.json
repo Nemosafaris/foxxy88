@@ -1,0 +1,10 @@
+{
+  "name": "personality-survey-online",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Thai personality survey with PostgreSQL-backed results",
+  "main": "server.js",
+  "scripts": {"start": "node server.js", "check": "node --check server.js && node --check script.js"},
+  "engines": {"node": ">=20"},
+  "dependencies": {"pg": "^8.13.1"}
+}

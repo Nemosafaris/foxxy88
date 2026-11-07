@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบสำรวจบุคลิกภาพ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="container">
+        <h1 class="title">แบบสำรวจบุคลิกภาพ</h1>
+        <div class="notifications-container" aria-live="polite"></div>
+        <p class="privacy-note">การส่งแบบสอบถามถือว่าคุณยินยอมให้จัดเก็บคำตอบทั้ง 10 ข้อและวันเวลาที่ส่ง เพื่อนำไปวิเคราะห์ผลแบบสอบถาม กรุณาอย่ากรอกข้อมูลส่วนบุคคลลงในคำตอบ</p>
+        <form id="personalityForm" novalidate>
+            <div id="progress-section">
+                <p id="progress-label" class="progress-label"></p>
+                <div class="progress-bar" role="progressbar" aria-label="ความคืบหน้า" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="progress-fill"></span></div>
+            </div>
+            <section class="question" id="questions-container" aria-live="polite"></section>
+            <div class="nav-buttons">
+                <button type="button" id="prev-btn" class="nav-btn hidden">ย้อนกลับ</button>
+                <button type="button" id="next-btn" class="nav-btn hidden">ถัดไป</button>
+                <button type="submit" class="submit-btn hidden">ส่งแบบสอบถาม</button>
+            </div>
+            <section id="results-container" class="hidden" tabindex="-1">
+                <h2>ขอบคุณสำหรับการตอบคำถาม!</h2>
+                <p>ผลวิเคราะห์เบื้องต้นจากคำตอบของคุณ</p>
+                <div id="feedback-section"></div>
+                <p id="save-status" class="save-status" role="status"></p>
+            </section>
+        </form>
+        <button type="button" id="restart-btn" class="restart-btn hidden">ทำแบบสอบถามใหม่</button>
+    </main>
+    <script src="script.js" defer></script>
+</body>
+</html>
