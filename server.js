@@ -68,6 +68,13 @@ const server=http.createServer(async(req,res)=>{
     const [count,items]=await Promise.all([db.query('SELECT COUNT(*)::int AS total FROM survey_results'),db.query('SELECT id,submitted_at,answers FROM survey_results ORDER BY submitted_at DESC,id DESC LIMIT $1 OFFSET $2',[limit,(page-1)*limit])]);
     return json(res,200,{total:count.rows[0].total,page,pageSize:limit,items:items.rows.map(serialize)});
    }
+   const resultId=pathname.match(/^\/api\/admin\/results\/([0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})$/i)?.[1];
+   if(resultId&&req.method==='DELETE'){
+    if(!guardOrigin(req))return json(res,403,{error:'Origin ไม่ถูกต้อง'});
+    await db.query('DELETE FROM survey_results WHERE id = $1',[resultId]);
+    res.writeHead(204,{'Cache-Control':'no-store'});
+    return res.end();
+   }
    if(pathname==='/api/admin/export'&&req.method==='GET'){
     const results=await db.query('SELECT id,submitted_at,answers FROM survey_results ORDER BY submitted_at DESC,id DESC LIMIT 50000');
     const content=xlsx(results.rows);
@@ -79,7 +86,7 @@ const server=http.createServer(async(req,res)=>{
    const [file,mime]=assets.get(pathname);res.writeHead(200,{'Content-Type':mime,'Cache-Control':pathname.startsWith('/admin')?'no-store':'no-cache'});return fs.createReadStream(path.join(__dirname,file)).on('error',e=>{console.error(e);res.destroy();}).pipe(res);
   }
   return json(res,404,{error:'ไม่พบหน้า'});
- }catch(err){console.error('Request failed',err.message);return !res.headersSent&&json(res,err.code||500,{error:err.code?err.message:'เซิร์ฟเวอร์ขัดข้อง'});}
+ }catch(err){console.error('Request failed',err.message);const status=Number.isInteger(err.code)&&err.code>=400&&err.code<500?err.code:500;return !res.headersSent&&json(res,status,{error:status===500?'เซิร์ฟเวอร์ขัดข้อง':err.message});}
 });
 async function start(){await db.query(`CREATE TABLE IF NOT EXISTS survey_results (id UUID PRIMARY KEY,submitted_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),answers JSONB NOT NULL)`);await new Promise(resolve=>server.listen(PORT,'0.0.0.0',resolve));console.log(`Survey online with admin on port ${PORT}`);}
 start().catch(err=>{console.error('Startup failed',err);process.exit(1);});
