@@ -248,7 +248,7 @@ async function submitSurvey(event) {
     // แสดงผลได้โดยไม่ต้องพึ่งพาเซิร์ฟเวอร์ (มีเพียงไฟล์ frontend ที่แนบมา)
     createResults();
     $('#questions-container').classList.add('hidden');
-    $('.nav-buttons').classList.add('hidden');
+    $('#personalityForm .nav-buttons').classList.add('hidden');
     $('#progress-section').classList.add('hidden');
     $('#results-container').classList.remove('hidden');
     $('#restart-btn').classList.remove('hidden');
@@ -283,7 +283,7 @@ function restartSurvey() {
     currentQuestion = 0;
     isSubmitting = false;
     $('#questions-container').classList.remove('hidden');
-    $('.nav-buttons').classList.remove('hidden');
+    $('#personalityForm .nav-buttons').classList.remove('hidden');
     $('#progress-section').classList.remove('hidden');
     $('#results-container').classList.add('hidden');
     $('#restart-btn').classList.add('hidden');
