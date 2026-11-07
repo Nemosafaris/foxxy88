@@ -229,7 +229,7 @@ async function submitSurvey(event) {
     isSubmitting = true;
     updateButtons();
     const data = Object.fromEntries(answers.map((answer, index) => [`q${index}`, answer]));
-    data.questionnaireVersion = 2;
+    data.questionnaireVersion = 3;
     data.nickname = nickname;
     data.creatorFeedback = creatorFeedback;
     $('#restart-btn').disabled = true;

@@ -54,7 +54,7 @@ const server=http.createServer(async(req,res)=>{
     return json(res,400,{error:'กรุณาเขียนข้อความถึงคนทำเว็บให้ถูกต้องและไม่เกิน 500 ตัวอักษร'});
    }
    answers.creatorFeedback=feedback;
-   if(questionnaireVersion===2)answers.questionnaireVersion=questionnaireVersion;
+   if(questionnaireVersion!==undefined)answers.questionnaireVersion=questionnaireVersion;
    const id=crypto.randomUUID();await db.query('INSERT INTO survey_results (id,answers) VALUES ($1,$2::jsonb)',[id,JSON.stringify(answers)]);return json(res,201,{success:true,id});
   }
   if(pathname==='/api/admin/login'&&req.method==='POST'){

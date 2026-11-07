@@ -1,5 +1,5 @@
 'use strict';
-const currentQuestions = require('./survey-questions');
+const {surveyQuestions, previousQuestions} = require('./survey-questions');
 const questions = [
  ['คุณชอบการทำงานแบบไหน?', [['อิสระและสามารถทำงานได้ตามจังหวะของตัวเอง','independent'],['รักการทำงานเป็นทีมและร่วมมือกับผู้อื่น','collaborative'],['ชอบทำตามขั้นตอนแต่ยืดหยุ่นได้','structured-flexible'],['เน้นความรวดเร็วและผลลัพธ์เป็นหลัก','result-oriented']]],
  ['เมื่อเจอปัญหาคุณจะ...', [['คิดและหาวิธีแก้คนเดียวก่อน','think-alone'],['ปรึกษาเพื่อนหรือขอความช่วยเหลือ','ask-for-help'],['รอให้มันค่อยๆ แก้เองตามธรรมชาติ','wait-and-see'],['หาข้อมูลออนไลน์มาวิเคราะห์เอง','research']]],
@@ -20,20 +20,24 @@ const traitByQuestion = [
  ['analytical','social','adaptable','analytical'],['analytical','action','social','action'],
  ['analytical','social','analytical','action'],['analytical','action','social','adaptable']
 ];
+function questionsFor(version) {
+ if (version === 3) return surveyQuestions;
+ if (version === 2) return previousQuestions;
+ return questions;
+}
 function valid(data, version) {
- const survey = version === 2 ? currentQuestions : questions;
+ const survey = questionsFor(version);
  return data && typeof data === 'object' && !Array.isArray(data)
-  && (version === undefined || version === 2)
+  && (version === undefined || version === 2 || version === 3)
   && Object.keys(data).length === survey.length
   && survey.every(([, options], i) => options.some(([, value]) => value === data['q' + i]));
 }
 function translate(answers) {
  const scores={analytical:0,social:0,adaptable:0,action:0};
- const current = answers?.questionnaireVersion === 2;
- const survey = current ? currentQuestions : questions;
+ const survey = questionsFor(answers?.questionnaireVersion);
  const details=survey.map(([question, opts],i) => {
   const idx=opts.findIndex(o=>o[1]===answers?.['q' + i]);
-  if(idx>=0) scores[current ? opts[idx][1] : traitByQuestion[i][idx]]++;
+  if(idx>=0) scores[survey === questions ? traitByQuestion[i][idx] : opts[idx][1]]++;
   return {number:i+1,question,answer:idx>=0?opts[idx][0]:'ไม่พบข้อมูล'};
  });
  const max=Math.max(...Object.values(scores));
