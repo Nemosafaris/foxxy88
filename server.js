@@ -14,6 +14,7 @@ if (!process.env.DATABASE_URL || !process.env.ADMIN_PASSWORD || !process.env.SES
 const db=new Pool({connectionString:process.env.DATABASE_URL,max:5,connectionTimeoutMillis:5000});
 const assets=new Map([
  ['/',['index.html','text/html; charset=utf-8']],['/index.html',['index.html','text/html; charset=utf-8']],
+ ['/survey-questions.js',['survey-questions.js','text/javascript; charset=utf-8']],
  ['/style.css',['style.css','text/css; charset=utf-8']],['/script.js',['script.js','text/javascript; charset=utf-8']],
  ['/admin',['admin.html','text/html; charset=utf-8']],['/admin.html',['admin.html','text/html; charset=utf-8']],
  ['/admin.js',['admin.js','text/javascript; charset=utf-8']],['/admin.css',['admin.css','text/css; charset=utf-8']]
@@ -38,8 +39,8 @@ const server=http.createServer(async(req,res)=>{
   if(pathname==='/api/results'&&req.method==='POST'){
    if(!guardOrigin(req))return json(res,403,{error:'Origin ไม่ถูกต้อง'});
    const data=await readJSON(req);
-   const {nickname,creatorFeedback,...answers}=data??{};
-   if(!valid(answers))return json(res,400,{error:'กรุณาตอบให้ครบ 10 ข้อ'});
+   const {nickname,creatorFeedback,questionnaireVersion,...answers}=data??{};
+   if(!valid(answers,questionnaireVersion))return json(res,400,{error:'กรุณาตอบให้ครบ 10 ข้อ'});
    // Keep accepting submissions from survey pages opened before this deployment.
    if(nickname!==undefined){
     const name=typeof nickname==='string'?nickname.trim():'';
@@ -53,6 +54,7 @@ const server=http.createServer(async(req,res)=>{
     return json(res,400,{error:'กรุณาเขียนข้อความถึงคนทำเว็บให้ถูกต้องและไม่เกิน 500 ตัวอักษร'});
    }
    answers.creatorFeedback=feedback;
+   if(questionnaireVersion===2)answers.questionnaireVersion=questionnaireVersion;
    const id=crypto.randomUUID();await db.query('INSERT INTO survey_results (id,answers) VALUES ($1,$2::jsonb)',[id,JSON.stringify(answers)]);return json(res,201,{success:true,id});
   }
   if(pathname==='/api/admin/login'&&req.method==='POST'){

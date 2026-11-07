@@ -1,66 +1,7 @@
-const questions = [
-    { text: "คุณชอบการทำงานแบบไหน?", options: [
-        { label: "อิสระและสามารถทำงานได้ตามจังหวะของตัวเอง", value: "independent" },
-        { label: "รักการทำงานเป็นทีมและร่วมมือกับผู้อื่น", value: "collaborative" },
-        { label: "ชอบทำตามขั้นตอนแต่ยืดหยุ่นได้", value: "structured-flexible" },
-        { label: "เน้นความรวดเร็วและผลลัพธ์เป็นหลัก", value: "result-oriented" }
-    ] },
-    { text: "เมื่อเจอปัญหาคุณจะ...", options: [
-        { label: "คิดและหาวิธีแก้คนเดียวก่อน", value: "think-alone" },
-        { label: "ปรึกษาเพื่อนหรือขอความช่วยเหลือ", value: "ask-for-help" },
-        { label: "รอให้มันค่อยๆ แก้เองตามธรรมชาติ", value: "wait-and-see" },
-        { label: "หาข้อมูลออนไลน์มาวิเคราะห์เอง", value: "research" }
-    ] },
-    { text: "คุณเป็นคนที่ชอบ...", options: [
-        { label: "วางแผนและจัดลำดับความสำคัญ", value: "planner" },
-        { label: "ลองทำสิ่งใหม่ๆ ดูผลก่อน", value: "spontaneous" },
-        { label: "ทำตามแผนที่มีอยู่แล้ว", value: "routine" },
-        { label: "ปรับตัวตามสถานการณ์ที่เกิดขึ้น", value: "adaptable" }
-    ] },
-    { text: "เมื่อคนแปลกหน้าเข้ามาทักทาย...", options: [
-        { label: "ยิ้มและคุยแบบสุภาพ", value: "polite" },
-        { label: "ดูเป็นธรรมชาติและไม่สนใจมาก", value: "casual" },
-        { label: "เปิดใจและแสดงความต้อนรับ", value: "welcoming" },
-        { label: "ตอบกลับแบบสั้นๆ แล้วกลับสู่กิจกรรมเดิม", value: "concise" }
-    ] },
-    { text: "คุณชอบการทำงานแบบไหน?", options: [
-        { label: "มีเป้าหมายชัดเจนและทำตามขั้นตอน", value: "structured" },
-        { label: "ยืดหยุ่นและปรับได้ตามสถานการณ์", value: "flexible" },
-        { label: "เน้นความละเอียดและความแม่นยำ", value: "precision" },
-        { label: "ทำงานให้เสร็จก่อนกำหนดเวลาเสมอ", value: "time-manager" }
-    ] },
-    { text: "เมื่อรู้สึกเบื่อ...", options: [
-        { label: "ทำสิ่งที่เคยโปรดปรานเดิมๆ", value: "stay-comfortable" },
-        { label: "เปลี่ยนไปหาอะไรใหม่ๆ ทำ", value: "try-new" },
-        { label: "พักผ่อนให้ถึงก่อนแล้วค่อยเริ่มใหม่", value: "rest-recover" },
-        { label: "ทำสิ่งที่เคยไม่สนใจแต่พยายามทำให้", value: "challenge-self" }
-    ] },
-    { text: "คุณเป็นคนที่...", options: [
-        { label: "เก็บความรู้สึกและแสดงออกน้อย", value: "reserved" },
-        { label: "เปิดใจและสื่อสารอย่างตรงไปตรงมา", value: "open" },
-        { label: "มองบวกต่อทุกสถานการณ์", value: "optimistic" },
-        { label: "วิเคราะห์ก่อนแล้วค่อยตัดสินใจ", value: "analytical" }
-    ] },
-    { text: "การตัดสินใจเรื่องสำคัญ...", options: [
-        { label: "คิดวิเคราะห์อย่างละเอียดก่อน", value: "careful" },
-        { label: "ลงมือทำแล้วค่อยปรับปรุง", value: "improvement" },
-        { label: "ฟังคนอื่นก่อนแล้วตัดสินใจ", value: "consensus" },
-        { label: "ตัดสินใจเร็วเพื่อไม่เสียเวลา", value: "decisive" }
-    ] },
-    { text: "คุณชอบบรรยากาศที่...", options: [
-        { label: "มีระเบียบและชัดเจน", value: "organized" },
-        { label: "ผ่อนคลายและเป็นกันเอง", value: "relaxed" },
-        { label: "มีพื้นที่ส่วนตัวและไม่รบกวนผู้อื่น", value: "private" },
-        { label: "แอคทีฟและมีพลังงานอยู่เสมอ", value: "energetic" }
-    ] },
-    { text: "เมื่อเรียนรู้อะไรใหม่ๆ...", options: [
-        { label: "จดบันทึกและทบทวนให้เข้าใจ", value: "memorize" },
-        { label: "ลงมือทำจริงเป็นหลัก", value: "practice" },
-        { label: "ถามเพื่อนหรือผู้เชี่ยวชาญ", value: "ask-expert" },
-        { label: "สังเกตและเรียนรู้จากการลองผิดลองถูก", value: "experience-learning" }
-    ] }
-];
-
+const questions = surveyQuestions.map(([text, options]) => ({
+    text,
+    options: options.map(([label, value]) => ({label, value}))
+}));
 
 // ผลลัพธ์ด้านบุคลิกภาพเป็นการสะท้อนแนวโน้มจากคำตอบ ไม่ใช่แบบทดสอบทางจิตวิทยาที่ผ่านการรับรอง
 const traits = {
@@ -69,20 +10,6 @@ const traits = {
     adaptable: { meaning: 'พร้อมลองวิธีใหม่และเรียนรู้จากสิ่งที่เจอ', name: 'นักปรับตัวและเรียนรู้', detail: 'คุณมีแนวโน้มเปิดรับการเปลี่ยนแปลง เรียนรู้จากประสบการณ์ และปรับวิธีการตามสถานการณ์' },
     action: { meaning: 'ชอบเริ่มลงมือและพางานไปให้ถึงเป้าหมาย', name: 'นักลงมือทำ', detail: 'คุณมีแนวโน้มเน้นการลงมือปฏิบัติ ความกระตือรือร้น และการทำงานให้สำเร็จ' }
 };
-// ระบุลักษณะจากแต่ละตัวเลือกอย่างชัดเจน ไม่ใช้ value ซึ่งไม่ซ้ำกันมาเป็นคะแนน
-const traitByQuestion = [
-    ['adaptable', 'social', 'analytical', 'action'],
-    ['analytical', 'social', 'adaptable', 'analytical'],
-    ['analytical', 'action', 'analytical', 'adaptable'],
-    ['social', 'adaptable', 'social', 'analytical'],
-    ['analytical', 'adaptable', 'analytical', 'action'],
-    ['analytical', 'adaptable', 'adaptable', 'action'],
-    ['analytical', 'social', 'adaptable', 'analytical'],
-    ['analytical', 'action', 'social', 'action'],
-    ['analytical', 'social', 'analytical', 'action'],
-    ['analytical', 'action', 'social', 'adaptable']
-];
-
 let nickname = '';
 let currentQuestion = 0;
 let isSubmitting = false;
@@ -224,7 +151,7 @@ function createResults() {
     answers.forEach((answer, questionIndex) => {
         const optIndex = questions[questionIndex].options.findIndex(option => option.value === answer);
         if (optIndex < 0) return;
-        scores[traitByQuestion[questionIndex][optIndex]]++;
+        scores[answer]++;
         summary.push({question: questions[questionIndex].text, answer: questions[questionIndex].options[optIndex].label});
     });
     const highest = Math.max(...Object.values(scores));
@@ -302,6 +229,7 @@ async function submitSurvey(event) {
     isSubmitting = true;
     updateButtons();
     const data = Object.fromEntries(answers.map((answer, index) => [`q${index}`, answer]));
+    data.questionnaireVersion = 2;
     data.nickname = nickname;
     data.creatorFeedback = creatorFeedback;
     $('#restart-btn').disabled = true;

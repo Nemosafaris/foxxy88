@@ -18,8 +18,8 @@ function zip(entries) {
  return Buffer.concat([...bodies,center,end]);
 }
 function xlsx(rows){
- const head=['รหัสรายการ','ชื่อเล่น','วันที่ส่ง (เวลาไทย)','ผลวิเคราะห์แนวโน้ม',...Array.from({length:10},(_,i)=>`ข้อ ${i+1}`),'ข้อความถึงคนทำเว็บ'];
- const all=[head,...rows.map(row=>{const t=translate(row.answers);return [row.id,row.answers?.nickname,new Date(row.submitted_at).toLocaleString('th-TH',{timeZone:'Asia/Bangkok',hour12:false}),t.result,...t.details.map(d=>d.answer),row.answers?.creatorFeedback];})];
+ const head=['รหัสรายการ','ชื่อเล่น','วันที่ส่ง (เวลาไทย)','ผลวิเคราะห์แนวโน้ม',...Array.from({length:10},(_,i)=>`ข้อ ${i+1}`),'ข้อความถึงคนทำเว็บ','ชุดคำถาม'];
+ const all=[head,...rows.map(row=>{const t=translate(row.answers);return [row.id,row.answers?.nickname,new Date(row.submitted_at).toLocaleString('th-TH',{timeZone:'Asia/Bangkok',hour12:false}),t.result,...t.details.map(d=>d.answer),row.answers?.creatorFeedback,row.answers?.questionnaireVersion===2?2:1];})];
  const cells=all.map((row,i)=>`<row r="${i+1}">${row.map((value,j)=>{let n=j+1,letters='';while(n){n--;letters=String.fromCharCode(65+n%26)+letters;n=Math.floor(n/26);}let s=String(value??'');if(/^[=+@\-\t\r]/.test(s))s="'"+s;return `<c r="${letters}${i+1}" t="inlineStr"><is><t xml:space="preserve">${escape(s)}</t></is></c>`;}).join('')}</row>`).join('');
  const sheet=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"/></sheetViews><sheetFormatPr defaultRowHeight="17"/><sheetData>${cells}</sheetData></worksheet>`;
  return zip([
