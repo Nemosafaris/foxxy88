@@ -65,13 +65,16 @@ details li { margin: 12px 0; }
 @keyframes trait-arrive { from { transform: translateY(6px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
 .trait-hero { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
-.trait-icon { display: inline-grid; place-items: center; width: 2rem; height: 2rem; flex: 0 0 auto; border-radius: 10px; background: var(--trait-bg); }
-.trait-hero .trait-icon { width: 3.5rem; height: 3.5rem; font-size: 1.8rem; border-radius: 17px; }
-.trait-icon--analytical { --trait-bg: #eae5ff; }
-.trait-icon--social { --trait-bg: #ffe6ee; }
-.trait-icon--adaptable { --trait-bg: #e1f5e9; }
-.trait-icon--action { --trait-bg: #fff0c9; }
+.trait-portrait { display: block; width: 3.25rem; height: 3.25rem; flex: 0 0 auto; overflow: hidden; border-radius: 13px; background: var(--trait-bg); }
+.trait-portrait svg { display: block; width: 100%; height: 100%; }
+.trait-hero .trait-portrait { width: 6rem; height: 6rem; border-radius: 22px; }
+.trait-portrait--analytical { --trait-bg: #eae5ff; }
+.trait-portrait--social { --trait-bg: #ffe6ee; }
+.trait-portrait--adaptable { --trait-bg: #e1f5e9; }
+.trait-portrait--action { --trait-bg: #fff0c9; }
 .score-name { display: flex; align-items: center; gap: 10px; }
+.trait-copy { font-weight: 650; }
+.trait-copy small { display: block; color: #5f5b72; font-size: .85rem; font-weight: 400; }
 .score-row { align-items: center; }
 .score-row strong { white-space: nowrap; }
 

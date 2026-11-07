@@ -64,10 +64,10 @@ const questions = [
 
 // ผลลัพธ์ด้านบุคลิกภาพเป็นการสะท้อนแนวโน้มจากคำตอบ ไม่ใช่แบบทดสอบทางจิตวิทยาที่ผ่านการรับรอง
 const traits = {
-    analytical: { icon: '🔍', name: 'นักคิดและวางแผน', detail: 'คุณมีแนวโน้มให้ความสำคัญกับข้อมูล ความรอบคอบ และการวางแผนก่อนลงมือทำ' },
-    social: { icon: '🤝', name: 'นักประสานงาน', detail: 'คุณมีแนวโน้มให้ความสำคัญกับการสื่อสาร การรับฟัง และการทำงานร่วมกับผู้อื่น' },
-    adaptable: { icon: '🌱', name: 'นักปรับตัวและเรียนรู้', detail: 'คุณมีแนวโน้มเปิดรับการเปลี่ยนแปลง เรียนรู้จากประสบการณ์ และปรับวิธีการตามสถานการณ์' },
-    action: { icon: '⚡', name: 'นักลงมือทำ', detail: 'คุณมีแนวโน้มเน้นการลงมือปฏิบัติ ความกระตือรือร้น และการทำงานให้สำเร็จ' }
+    analytical: { meaning: 'ชอบดูข้อมูลให้รอบด้านและวางแผนก่อนลงมือ', name: 'นักคิดและวางแผน', detail: 'คุณมีแนวโน้มให้ความสำคัญกับข้อมูล ความรอบคอบ และการวางแผนก่อนลงมือทำ' },
+    social: { meaning: 'ถนัดรับฟัง สื่อสาร และชวนคนมาทำงานด้วยกัน', name: 'นักประสานงาน', detail: 'คุณมีแนวโน้มให้ความสำคัญกับการสื่อสาร การรับฟัง และการทำงานร่วมกับผู้อื่น' },
+    adaptable: { meaning: 'พร้อมลองวิธีใหม่และเรียนรู้จากสิ่งที่เจอ', name: 'นักปรับตัวและเรียนรู้', detail: 'คุณมีแนวโน้มเปิดรับการเปลี่ยนแปลง เรียนรู้จากประสบการณ์ และปรับวิธีการตามสถานการณ์' },
+    action: { meaning: 'ชอบเริ่มลงมือและพางานไปให้ถึงเป้าหมาย', name: 'นักลงมือทำ', detail: 'คุณมีแนวโน้มเน้นการลงมือปฏิบัติ ความกระตือรือร้น และการทำงานให้สำเร็จ' }
 };
 // ระบุลักษณะจากแต่ละตัวเลือกอย่างชัดเจน ไม่ใช้ value ซึ่งไม่ซ้ำกันมาเป็นคะแนน
 const traitByQuestion = [
@@ -178,12 +178,44 @@ function findFirstMissing() {
     return answers.findIndex(value => value === null);
 }
 
-function createTraitIcon(key) {
-    const icon = document.createElement('span');
-    icon.classList.add('trait-icon', 'trait-icon--' + key);
-    icon.setAttribute('aria-hidden', 'true');
-    icon.textContent = traits[key].icon;
-    return icon;
+// Static illustration layers, one outfit and prop for each character.
+const traitPortraits = {
+    analytical: {
+        skin: '#ffc5a4', shirt: '#7860c6', hair: '#343059',
+        hairstyle: '<path d="M25 47V34a23 23 0 0 1 46 0v11l-6-8c-13 0-22-3-28-10-1 9-5 14-12 20Z"/>',
+        prop: '<g fill="none" stroke="#343059" stroke-width="2.6"><rect x="32" y="42" width="13" height="10" rx="4"/><rect x="51" y="42" width="13" height="10" rx="4"/><path d="M45 46h6"/></g><rect x="62" y="64" width="19" height="23" rx="3" fill="#fff0cf" transform="rotate(10 71 75)"/><path d="m67 72 9 2m-10 3 9 2" stroke="#7962bf" stroke-width="1.8" stroke-linecap="round"/>'
+    },
+    social: {
+        skin: '#ba784f', shirt: '#d86485', hair: '#483049',
+        hairstyle: '<path d="M25 43c-7-12-1-22 6-24 2-10 17-12 22-6 10-6 24 5 20 16 4 7 1 13-4 17l-4-10c-12 3-20-2-24-8-4 8-10 11-16 15Z"/>',
+        prop: '<path d="M65 63h15a6 6 0 0 1 6 6v3a6 6 0 0 1-6 6h-6l-6 5v-5h-3a6 6 0 0 1-6-6v-3a6 6 0 0 1 6-6Z" fill="#fff3f5"/><path d="M66 71h1m5 0h1m5 0h1" stroke="#b84770" stroke-width="2" stroke-linecap="round"/>'
+    },
+    adaptable: {
+        skin: '#edab79', shirt: '#4c9b7b', hair: '#583c39',
+        hairstyle: '<path d="M26 46c-6-9-3-24 6-29 9-5 22-6 31 1 6 5 8 13 7 24-5-1-7-6-9-12-8 6-18 8-29 7Z"/><path d="M27 39c-4 13-1 23 6 27l3-10-5-17Z"/>',
+        prop: '<path d="M62 75h19l-3 12H65Z" fill="#f7d3a1"/><path d="M71 76c0-9 3-14 8-17m-8 14c-2-7-5-9-9-10" fill="none" stroke="#26604b" stroke-width="2" stroke-linecap="round"/><path d="M73 67c0-7 4-10 10-10-1 6-4 10-10 10Zm-3 4c-5 0-8-3-9-8 6 0 9 3 9 8Z" fill="#91cf79"/>'
+    },
+    action: {
+        skin: '#d68f65', shirt: '#d47c38', hair: '#3d3041',
+        hairstyle: '<path d="M25 44V33c0-10 4-16 14-20l-2 6c6-6 17-9 26-6l-5 5c10 1 14 8 14 16v10l-6-9c-14 1-21-2-28-8-2 7-6 13-13 17Z"/><path d="M26 35c11-6 31-8 45-4l1 6c-14-4-34-2-47 4Z" fill="#ec9c4d"/>',
+        prop: '<circle cx="73" cy="75" r="11" fill="#fff0cf"/><path d="m67 75 4 4 7-8" fill="none" stroke="#9a4d29" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>'
+    }
+};
+
+function createTraitPortrait(key) {
+    const {skin, shirt, hair, hairstyle, prop} = traitPortraits[key];
+    const portrait = document.createElement('span');
+    portrait.classList.add('trait-portrait', 'trait-portrait--' + key);
+    portrait.setAttribute('aria-hidden', 'true');
+    portrait.innerHTML = '<svg viewBox="0 0 96 96" focusable="false">'
+        + '<circle cx="48" cy="47" r="35" fill="#fff" opacity=".46"/>'
+        + '<path d="M14 96v-8c0-15 12-24 27-25h14c15 1 27 10 27 25v8Z" fill="' + shirt + '"/>'
+        + '<path d="M41 56h14v9a7 7 0 0 1-14 0Z" fill="' + skin + '"/>'
+        + '<rect x="28" y="23" width="40" height="41" rx="19" fill="' + skin + '"/>'
+        + '<g fill="' + hair + '">' + hairstyle + '</g>'
+        + '<path d="M39 46h.1m17.9 0h.1m-13 9q4 3 8 0" fill="none" stroke="#3d3041" stroke-width="2.3" stroke-linecap="round"/>'
+        + prop + '</svg>';
+    return portrait;
 }
 
 function createResults() {
@@ -203,7 +235,7 @@ function createResults() {
     title.textContent = `แนวโน้มเด่นของคุณ: ${leaders.map(key => traits[key].name).join(' / ')}`;
     const badge = document.createElement('div');
     badge.className = 'trait-hero';
-    badge.append(...leaders.map(createTraitIcon));
+    badge.append(...leaders.map(createTraitPortrait));
     feedback.append(badge, title);
     const description = document.createElement('p');
     description.textContent = leaders.map(key => traits[key].detail).join(' ');
@@ -216,7 +248,12 @@ function createResults() {
         row.className = 'score-row';
         const name = document.createElement('span');
         name.className = 'score-name';
-        name.append(createTraitIcon(key), traits[key].name);
+        const copy = document.createElement('span');
+        copy.className = 'trait-copy';
+        const meaning = document.createElement('small');
+        meaning.textContent = traits[key].meaning;
+        copy.append(traits[key].name, meaning);
+        name.append(createTraitPortrait(key), copy);
         const count = document.createElement('strong');
         count.textContent = `${score} / ${questions.length}`;
         row.append(name, count);
