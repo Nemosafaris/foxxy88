@@ -74,3 +74,29 @@ details li { margin: 12px 0; }
 .score-name { display: flex; align-items: center; gap: 10px; }
 .score-row { align-items: center; }
 .score-row strong { white-space: nowrap; }
+
+.cat-message {
+    position: absolute;
+    top: 5px;
+    left: 79px;
+    margin: 0;
+    padding: 4px 12px;
+    border: 1px solid #dfd5fa;
+    border-radius: 13px 13px 13px 4px;
+    background: #fff;
+    color: #51479a;
+    font-size: .9rem;
+    font-weight: 650;
+}
+.cat-message:empty { opacity: 0; }
+.cat-trail[data-moment="halfway"] :is(.cat-walker, .survey-cat, .cat-leg, .cat-tail),
+.cat-trail[data-moment="complete"] :is(.cat-walker, .survey-cat, .cat-leg, .cat-tail) {
+    animation: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+    .cat-trail[data-moment="complete"] .cat-tail { animation: cat-cheer .28s ease-in-out 10 alternate; }
+}
+@keyframes cat-cheer {
+    from { transform: rotate(-18deg); }
+    to { transform: rotate(24deg); }
+}

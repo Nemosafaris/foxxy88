@@ -100,8 +100,19 @@ function createNotification(message, type = 'error') {
     setTimeout(() => notification.remove(), 4500);
 }
 
+function updateCat(moment = '') {
+    const trail = $('.cat-trail');
+    if ((trail.dataset.moment || '') === moment) return;
+    trail.dataset.moment = moment;
+    $('.cat-message').textContent = {
+        halfway: 'ครึ่งทางแล้ว!',
+        complete: 'ครบทุกข้อแล้ว เก่งมาก!'
+    }[moment] || '';
+}
+
 function updateProgress() {
     const completed = answers.filter(value => value !== null).length;
+    updateCat(completed === questions.length ? 'complete' : currentQuestion === 4 ? 'halfway' : '');
     const percent = Math.round(completed / questions.length * 100);
     $('#progress-label').textContent = `ข้อ ${currentQuestion + 1} จาก ${questions.length} · ตอบแล้ว ${completed} ข้อ`;
     $('#progress-fill').style.width = `${percent}%`;
@@ -279,6 +290,7 @@ async function submitSurvey(event) {
 }
 
 function restartSurvey() {
+    updateCat();
     answers.fill(null);
     currentQuestion = 0;
     isSubmitting = false;
